@@ -30,7 +30,7 @@ CPU_CNT=`grep -c ^processor /proc/cpuinfo`
 echo "CPU(s): $CPU_CNT"
 
 BUILD_DIR="./build_$ARCH"
-INSTALL_DIR="$HOME/dev/opencv/$ARCH"
+INSTALL_DIR="$HOME/dev/$ARCH/opencv"
 
 #create build & install
 mkdir $BUILD_DIR 
