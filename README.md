@@ -1,6 +1,7 @@
-# Cross build opencv for C++ in Ubuntu 20.04
+# Cross build opencv for C++ in Ubuntu 18.04 bionic
 
 ## Modify /etc/apt/source.list
+
 ```bash
 deb [arch=amd64,i386] http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse
 deb [arch=amd64,i386] http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse
