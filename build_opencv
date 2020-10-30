@@ -26,11 +26,15 @@ else
 	exit -1
 fi
 
+CPU_CNT=`grep -c ^processor /proc/cpuinfo`
+echo "CPU(s): $CPU_CNT"
+
 BUILD_DIR="./build_$ARCH"
 INSTALL_DIR="$HOME/dev/opencv/$ARCH"
 
 #create build & install
-mkdir $BUILD_DIR $INSTALL_DIR 
+mkdir $BUILD_DIR 
+mkdir -p $INSTALL_DIR 
 cd $BUILD_DIR
 
 cmake .. \
@@ -55,8 +59,8 @@ cmake .. \
 -DWITH_ANDROID_MEDIANDK=OFF \
 -DWITH_GTK=OFF \
 -DWITH_WIN32UI=OFF \
--DWITH_PROTOBUF=OFF \
--DBUILD_PROTOBUF=OFF \
+-DWITH_PROTOBUF=ON \
+-DBUILD_PROTOBUF=ON \
 -DWITH_DNN_OPENCL=ON \
 -DENABLE_NEON=$NEON \
 -DENABLE_VFPV3=$VFPV3 \
@@ -71,5 +75,8 @@ cmake .. \
 -DBUILD_opencv_python2=OFF \
 -DBUILD_opencv_python3=OFF
 
-make -j16
+echo "Press <ENTER> to continue..."
+read
+
+make -j$CPU_CNT
 make install
