@@ -1,21 +1,42 @@
 #!/bin/bash
 
+#Cloing opencv if not
 if [[ ! -d "opencv" ]]; then
 	git clone https://github.com/opencv/opencv.git
 else
-	rm -rf  opencv/build_arm64
+	rm -rf opencv/build_armhf
 fi
 
 cd opencv
 
+if [[ $1 == "armhf" ]]; then
+	ARCH="armhf"
+	TOOLCHAIN="arm-gnueabi"
+	NEON="ON"
+	VFPV3="ON"
+	FP16="OFF"
+elif [[ $1 == "aarch64" || $1 == "arm64" ]]; then
+	ARCH="arm64"
+	TOOLCHAIN="aarch64-gnu"
+	NEON="ON"
+	VFPV3="OFF"
+	FP16="ON"
+else
+	echo "ERROR: Invalid arch. (Supported arch: armhf/arm64/aarch64)"
+	exit -1
+fi
 
-mkdir build_arm64 install_arm64
-cd build_arm64
+BUILD_DIR="./build_$ARCH"
+INSTALL_DIR="$HOME/dev/opencv/$ARCH"
+
+#create build & install
+mkdir $BUILD_DIR $INSTALL_DIR 
+cd $BUILD_DIR
 
 cmake .. \
 -DCMAKE_BUILD_TYPE=RELEASE \
--DCMAKE_INSTALL_PREFIX=../install_arm64 \
--DCMAKE_TOOLCHAIN_FILE=../platforms/linux/aarch64-gnu.toolchain.cmake \
+-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR \
+-DCMAKE_TOOLCHAIN_FILE=../platforms/linux/$TOOLCHAIN.toolchain.cmake \
 -DINSTALL_C_EXAMPLES=OFF \
 -DINSTALL_PYTHON_EXAMPLES=OFF \
 -DWITH_PTHREADS_PF=ON \
@@ -37,15 +58,14 @@ cmake .. \
 -DWITH_PROTOBUF=OFF \
 -DBUILD_PROTOBUF=OFF \
 -DWITH_DNN_OPENCL=ON \
--DCPU_BASELINE="NEON VFPV3" \
--DENABLE_NEON=ON \
--DENABLE_FP16=ON \
--DENABLE_VFPV3=OFF \
+-DENABLE_NEON=$NEON \
+-DENABLE_VFPV3=$VFPV3 \
+-DENABLE_FP16=$FP16 \
 -DBUILD_EXAMPLES=OFF \
 -DBUILD_TESTS=OFF \
 -DBUILD_PYTHON=OFF \
 -DBUILD_opencv_apps=OFF \
--DBUILD_LIST=core,videoio,imgproc,imgcodecs,calib3d,ml,video \
+-DBUILD_LIST=core,videoio,imgproc,imgcodecs,calib3d,ml,video,dnn \
 -DBUILD_JAVA=OFF \
 -DBUILD_FAT_JAVA_LIB=OFF \
 -DBUILD_opencv_python2=OFF \
