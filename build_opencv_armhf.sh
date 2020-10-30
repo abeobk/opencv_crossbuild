@@ -2,6 +2,8 @@
 
 if [[ ! -d "opencv" ]]; then
 	git clone https://github.com/opencv/opencv.git
+else
+	rm -rf opencv/build_armhf
 fi
 
 cd opencv
