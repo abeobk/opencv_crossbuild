@@ -26,14 +26,7 @@ sudo apt-get install git cmake
 git clone https://github.com/abeobk/opencv_crossbuild.git
 cd opencv_crossbuild
 sudo ./dep_install
+build_opencv <arch>
 ```
 
-For armhf run:
-```bash
-build_opencv armhf
-```
-
-For arm64 run:
-```bash
-build_opencv arm64
-```
+arch = armel/armhf/arm64

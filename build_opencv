@@ -3,8 +3,6 @@
 #Cloing opencv if not
 if [[ ! -d "opencv" ]]; then
 	git clone https://github.com/opencv/opencv.git
-else
-	rm -rf opencv/build_armhf
 fi
 
 cd opencv
@@ -15,18 +13,24 @@ if [[ $1 == "armhf" ]]; then
 	NEON="ON"
 	VFPV3="ON"
 	FP16="OFF"
+	CXX="arm-linux-gnueabihf-g++"
+	C="arm-linux-gnueabihf-gcc"
 elif [[ $1 == "armel" ]]; then
-	ARCH="armhf"
-	TOOLCHAIN="arm-gnueabi"
+	ARCH="armel"
+	TOOLCHAIN="arm"
+	CXX="arm-linux-gnueabi-g++"
+	C="arm-linux-gnueabi-gcc"
 	NEON="OFF"
 	VFPV3="OFF"
 	FP16="OFF"
 elif [[ $1 == "aarch64" || $1 == "arm64" ]]; then
 	ARCH="arm64"
 	TOOLCHAIN="aarch64-gnu"
+	CXX="aarch64-linux-gnu-g++"
+	C="aarch64-linux-gnu-gcc"
 	NEON="ON"
 	VFPV3="OFF"
-	FP16="ON"
+	P16="ON"
 else
 	echo "ERROR: Invalid arch. (Supported arch: armhf/arm64/aarch64)"
 	exit -1
@@ -39,6 +43,7 @@ BUILD_DIR="./build_$ARCH"
 INSTALL_DIR="$HOME/dev/$ARCH/opencv"
 
 #create build & install
+rm -rf $BUILD_DIR 
 mkdir $BUILD_DIR 
 mkdir -p $INSTALL_DIR 
 cd $BUILD_DIR
@@ -47,6 +52,8 @@ cmake .. \
 -DCMAKE_BUILD_TYPE=RELEASE \
 -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 -DCMAKE_TOOLCHAIN_FILE=../platforms/linux/$TOOLCHAIN.toolchain.cmake \
+-DCMAKE_CXX_COMPILER=$CXX \
+-DCMAKE_C_COMPILER=$C \
 -DINSTALL_C_EXAMPLES=OFF \
 -DINSTALL_PYTHON_EXAMPLES=OFF \
 -DWITH_PTHREADS_PF=ON \
@@ -55,6 +62,8 @@ cmake .. \
 -DWITH_OPENGL=OFF \
 -DWITH_TIFF=OFF \
 -DWITH_WEBP=OFF \
+-DWITH_TBB=ON \
+-DBUILD_TBB=ON \
 -DWITH_OPENEXR=OFF \
 -DWITH_JASPER=OFF \
 -DWITH_GSTREAMER=OFF \
