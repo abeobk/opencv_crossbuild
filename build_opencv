@@ -15,6 +15,12 @@ if [[ $1 == "armhf" ]]; then
 	NEON="ON"
 	VFPV3="ON"
 	FP16="OFF"
+elif [[ $1 == "armel" ]]; then
+	ARCH="armhf"
+	TOOLCHAIN="arm-gnueabi"
+	NEON="OFF"
+	VFPV3="OFF"
+	FP16="OFF"
 elif [[ $1 == "aarch64" || $1 == "arm64" ]]; then
 	ARCH="arm64"
 	TOOLCHAIN="aarch64-gnu"
